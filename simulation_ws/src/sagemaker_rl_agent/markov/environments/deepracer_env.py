@@ -95,7 +95,7 @@ class DeepRacerEnv(gym.Env):
             return self.observation_space.sample()
         print('Total Reward Reward=%.2f' % self.reward_in_episode,
               'Total Steps=%.2f' % self.steps)
-        self.send_reward_to_cloudwatch(self.reward_in_episode)
+        # self.send_reward_to_cloudwatch(self.reward_in_episode)
 
         self.reward_in_episode = 0
         self.reward = None

@@ -5,7 +5,7 @@ This is single machine training worker. It starts a local training and stores th
 import argparse
 import copy
 
-from markov.s3_boto_data_store import S3BotoDataStore, S3BotoDataStoreParameters
+# from markov.s3_boto_data_store import S3BotoDataStore, S3BotoDataStoreParameters
 from rl_coach.base_parameters import TaskParameters, Frameworks
 from rl_coach.utils import short_dynamic_import
 import imp
@@ -92,10 +92,10 @@ def main():
     task_parameters.__dict__['checkpoint_save_dir'] = args.local_model_directory
     task_parameters.__dict__ = add_items_to_dict(task_parameters.__dict__, args.__dict__)
 
-    data_store_params_instance = S3BotoDataStoreParameters(bucket_name=args.model_s3_bucket,
-                                                           s3_folder=args.model_s3_prefix,
-                                                           checkpoint_dir=args.local_model_directory,
-                                                           aws_region=args.aws_region)
+    # data_store_params_instance = S3BotoDataStoreParameters(bucket_name=args.model_s3_bucket,
+                                                        #    s3_folder=args.model_s3_prefix,
+                                                        #    checkpoint_dir=args.local_model_directory,
+                                                        #    aws_region=args.aws_region)
     # data_store = S3BotoDataStore(data_store_params_instance)
 
     # if args.save_frozen_graph:
