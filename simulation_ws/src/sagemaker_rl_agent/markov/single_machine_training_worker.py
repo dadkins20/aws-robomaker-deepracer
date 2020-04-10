@@ -96,13 +96,13 @@ def main():
                                                            s3_folder=args.model_s3_prefix,
                                                            checkpoint_dir=args.local_model_directory,
                                                            aws_region=args.aws_region)
-    data_store = S3BotoDataStore(data_store_params_instance)
+    # data_store = S3BotoDataStore(data_store_params_instance)
 
-    if args.save_frozen_graph:
-        data_store.graph_manager = graph_manager
+    # if args.save_frozen_graph:
+    #     data_store.graph_manager = graph_manager
 
-    graph_manager.data_store_params = data_store_params_instance
-    graph_manager.data_store = data_store
+    # graph_manager.data_store_params = data_store_params_instance
+    # graph_manager.data_store = data_store
     graph_manager.should_stop = should_stop_training_based_on_evaluation
     start_graph(graph_manager=graph_manager, task_parameters=task_parameters)
 
