@@ -21,12 +21,12 @@ def wait_for_checkpoint(checkpoint_dir, data_store=None, retries=10):
     block until there is a checkpoint in checkpoint_dir
     """
     for i in range(retries):
-        if data_store:
-            data_store.load_from_store()
+        # if data_store:
+        #     data_store.load_from_store()
 
         if has_checkpoint(checkpoint_dir):
             return
-        time.sleep(10)
+        time.sleep(5)
 
     raise ValueError((
         'Tried {retries} times, but checkpoint never found in '

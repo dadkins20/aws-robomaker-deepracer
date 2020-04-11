@@ -45,139 +45,139 @@ class S3BotoDataStore(DataStore):
 
     def save_to_store(self):
         try:
-            s3_client = self._get_client()
+            # s3_client = self._get_client()
 
             if self.graph_manager:
                 utils.write_frozen_graph(self.graph_manager, self.params.checkpoint_dir)
 
             # Delete any existing lock file
-            s3_client.delete_object(Bucket=self.params.bucket, Key=self._get_s3_key(self.params.lock_file))
+            # s3_client.delete_object(Bucket=self.params.bucket, Key=self._get_s3_key(self.params.lock_file))
 
             # We take a lock by writing a lock file to the same location in S3
-            s3_client.upload_fileobj(Fileobj=io.BytesIO(b''),
-                                     Bucket=self.params.bucket,
-                                     Key=self._get_s3_key(self.params.lock_file))
+            # s3_client.upload_fileobj(Fileobj=io.BytesIO(b''),
+                                    #  Bucket=self.params.bucket,
+                                    #  Key=self._get_s3_key(self.params.lock_file))
 
             # Start writing the model checkpoints to S3
-            checkpoint_file = None
-            for root, dirs, files in os.walk(self.params.checkpoint_dir):
-                for filename in files:
-                    # Skip the checkpoint file that has the latest checkpoint number
-                    if filename == CHECKPOINT_METADATA_FILENAME:
-                        checkpoint_file = (root, filename)
-                        continue
+            # checkpoint_file = None
+            # for root, dirs, files in os.walk(self.params.checkpoint_dir):
+            #     for filename in files:
+            #         # Skip the checkpoint file that has the latest checkpoint number
+            #         if filename == CHECKPOINT_METADATA_FILENAME:
+            #             checkpoint_file = (root, filename)
+            #             continue
 
-                    # Upload all the other files from the checkpoint directory
-                    abs_name = os.path.abspath(os.path.join(root, filename))
-                    rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
-                    s3_client.upload_file(Filename=abs_name,
-                                          Bucket=self.params.bucket,
-                                          Key=self._get_s3_key(rel_name))
+            #         # Upload all the other files from the checkpoint directory
+            #         abs_name = os.path.abspath(os.path.join(root, filename))
+            #         rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
+            #         s3_client.upload_file(Filename=abs_name,
+            #                               Bucket=self.params.bucket,
+            #                               Key=self._get_s3_key(rel_name))
 
             # After all the checkpoint files have been uploaded, we upload the version file.
-            abs_name = os.path.abspath(os.path.join(checkpoint_file[0], checkpoint_file[1]))
-            rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
-            s3_client.upload_file(Filename=abs_name,
-                                  Bucket=self.params.bucket,
-                                  Key=self._get_s3_key(rel_name))
+            # abs_name = os.path.abspath(os.path.join(checkpoint_file[0], checkpoint_file[1]))
+            # rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
+            # s3_client.upload_file(Filename=abs_name,
+            #                       Bucket=self.params.bucket,
+            #                       Key=self._get_s3_key(rel_name))
 
-            # Release the lock by deleting the lock file from S3
-            s3_client.delete_object(Bucket=self.params.bucket, Key=self._get_s3_key(self.params.lock_file))
+            # # Release the lock by deleting the lock file from S3
+            # s3_client.delete_object(Bucket=self.params.bucket, Key=self._get_s3_key(self.params.lock_file))
 
-            checkpoint = self._get_current_checkpoint()
-            if checkpoint:
-                checkpoint_number = self._get_checkpoint_number(checkpoint)
-                checkpoint_number_to_delete = checkpoint_number - 4
+            # checkpoint = self._get_current_checkpoint()
+            # if checkpoint:
+            #     checkpoint_number = self._get_checkpoint_number(checkpoint)
+            #     checkpoint_number_to_delete = checkpoint_number - 4
 
-                # List all the old checkpoint files that needs to be deleted
-                response = s3_client.list_objects_v2(Bucket=self.params.bucket,
-                                                     Prefix=self._get_s3_key(str(checkpoint_number_to_delete) + "_"))
-                if "Contents" in response:
-                    num_files = 0
-                    for obj in response["Contents"]:
-                        s3_client.delete_object(Bucket=self.params.bucket,
-                                                Key=obj["Key"])
-                        num_files += 1
+            #     # List all the old checkpoint files that needs to be deleted
+            #     response = s3_client.list_objects_v2(Bucket=self.params.bucket,
+            #                                          Prefix=self._get_s3_key(str(checkpoint_number_to_delete) + "_"))
+            #     if "Contents" in response:
+            #         num_files = 0
+            #         for obj in response["Contents"]:
+            #             s3_client.delete_object(Bucket=self.params.bucket,
+            #                                     Key=obj["Key"])
+            #             num_files += 1
 
-                    print("Deleted %s model files from S3" % num_files)
-                    return True
+            #         print("Deleted %s model files from S3" % num_files)
+            #         return True
         except Exception as e:
             raise e
 
     def load_from_store(self, expected_checkpoint_number=-1):
-        try:
-            filename = os.path.abspath(os.path.join(self.params.checkpoint_dir, CHECKPOINT_METADATA_FILENAME))
-            if not os.path.exists(self.params.checkpoint_dir):
-                os.makedirs(self.params.checkpoint_dir)
+        # try:
+        #     filename = os.path.abspath(os.path.join(self.params.checkpoint_dir, CHECKPOINT_METADATA_FILENAME))
+        #     if not os.path.exists(self.params.checkpoint_dir):
+        #         os.makedirs(self.params.checkpoint_dir)
 
-            while True:
-                s3_client = self._get_client()
-                response = s3_client.list_objects_v2(Bucket=self.params.bucket,
-                                                     Prefix=self._get_s3_key(self.params.lock_file))
+        #     while True:
+        #         s3_client = self._get_client()
+        #         response = s3_client.list_objects_v2(Bucket=self.params.bucket,
+        #                                              Prefix=self._get_s3_key(self.params.lock_file))
 
-                if "Contents" not in response:
-                    try:
-                        # If no lock is found, try getting the checkpoint
-                        s3_client.download_file(Bucket=self.params.bucket,
-                                                Key=self._get_s3_key(CHECKPOINT_METADATA_FILENAME),
-                                                Filename=filename)
-                    except Exception as e:
-                        print("Got exception while downloading checkpoint", e)
-                        time.sleep(SLEEP_TIME_WHILE_WAITING_FOR_DATA_FROM_TRAINER_IN_SECOND)
-                        continue
-                else:
-                    time.sleep(SLEEP_TIME_WHILE_WAITING_FOR_DATA_FROM_TRAINER_IN_SECOND)
-                    continue
+        #         if "Contents" not in response:
+        #             try:
+        #                 # If no lock is found, try getting the checkpoint
+        #                 s3_client.download_file(Bucket=self.params.bucket,
+        #                                         Key=self._get_s3_key(CHECKPOINT_METADATA_FILENAME),
+        #                                         Filename=filename)
+        #             except Exception as e:
+        #                 print("Got exception while downloading checkpoint", e)
+        #                 time.sleep(SLEEP_TIME_WHILE_WAITING_FOR_DATA_FROM_TRAINER_IN_SECOND)
+        #                 continue
+        #         else:
+        #             time.sleep(SLEEP_TIME_WHILE_WAITING_FOR_DATA_FROM_TRAINER_IN_SECOND)
+        #             continue
 
-                checkpoint = self._get_current_checkpoint()
-                if checkpoint:
-                    checkpoint_number = self._get_checkpoint_number(checkpoint)
+        #         checkpoint = self._get_current_checkpoint()
+        #         if checkpoint:
+        #             checkpoint_number = self._get_checkpoint_number(checkpoint)
 
-                    # if we get a checkpoint that is older that the expected checkpoint, we wait for
-                    #  the new checkpoint to arrive.
-                    if checkpoint_number < expected_checkpoint_number:
-                        time.sleep(SLEEP_TIME_WHILE_WAITING_FOR_DATA_FROM_TRAINER_IN_SECOND)
-                        continue
+        #             # if we get a checkpoint that is older that the expected checkpoint, we wait for
+        #             #  the new checkpoint to arrive.
+        #             if checkpoint_number < expected_checkpoint_number:
+        #                 time.sleep(SLEEP_TIME_WHILE_WAITING_FOR_DATA_FROM_TRAINER_IN_SECOND)
+        #                 continue
 
-                    # Found a checkpoint to be downloaded
-                    response = s3_client.list_objects_v2(Bucket=self.params.bucket,
-                                                         Prefix=self._get_s3_key(checkpoint.model_checkpoint_path))
-                    if "Contents" in response:
-                        num_files = 0
-                        for obj in response["Contents"]:
-                            # Get the local filename of the checkpoint file
-                            filename = os.path.abspath(os.path.join(self.params.checkpoint_dir,
-                                                                    obj["Key"].replace(self.key_prefix, "")))
-                            s3_client.download_file(Bucket=self.params.bucket,
-                                                    Key=obj["Key"],
-                                                    Filename=filename)
-                            num_files += 1
-                        print("Downloaded %s model files from S3" % num_files)
-                        return True
+        #             # Found a checkpoint to be downloaded
+        #             response = s3_client.list_objects_v2(Bucket=self.params.bucket,
+        #                                                  Prefix=self._get_s3_key(checkpoint.model_checkpoint_path))
+        #             if "Contents" in response:
+        #                 num_files = 0
+        #                 for obj in response["Contents"]:
+        #                     # Get the local filename of the checkpoint file
+        #                     filename = os.path.abspath(os.path.join(self.params.checkpoint_dir,
+        #                                                             obj["Key"].replace(self.key_prefix, "")))
+        #                     s3_client.download_file(Bucket=self.params.bucket,
+        #                                             Key=obj["Key"],
+        #                                             Filename=filename)
+        #                     num_files += 1
+        #                 print("Downloaded %s model files from S3" % num_files)
+        #                 return True
 
-        except Exception as e:
-            print("Got exception while loading model from S3", e)
-            raise e
+        # except Exception as e:
+        #     print("Got exception while loading model from S3", e)
+        #     raise e
 
-    def store_ip(self, ip_address):
-        s3_client = self._get_client()
-        ip_data = {IP_KEY: ip_address}
-        ip_data_json_blob = json.dumps(ip_data)
-        ip_data_file_object = io.BytesIO(ip_data_json_blob.encode())
-        ip_done_file_object = io.BytesIO(b'done')
-        s3_client.upload_fileobj(ip_data_file_object, self.params.bucket, self.ip_data_key)
-        s3_client.upload_fileobj(ip_done_file_object, self.params.bucket, self.ip_done_key)
+    # def store_ip(self, ip_address):
+        # s3_client = self._get_client()
+        # ip_data = {IP_KEY: ip_address}
+        # ip_data_json_blob = json.dumps(ip_data)
+        # ip_data_file_object = io.BytesIO(ip_data_json_blob.encode())
+        # ip_done_file_object = io.BytesIO(b'done')
+        # s3_client.upload_fileobj(ip_data_file_object, self.params.bucket, self.ip_data_key)
+        # s3_client.upload_fileobj(ip_done_file_object, self.params.bucket, self.ip_done_key)
 
-    def get_ip(self):
-        self._wait_for_ip_upload()
-        s3_client = self._get_client()
-        try:
-            s3_client.download_file(self.params.bucket, self.ip_data_key, 'ip.json')
-            with open("ip.json") as f:
-                ip_address = json.load(f)[IP_KEY]
-            return ip_address
-        except Exception as e:
-            raise RuntimeError("Cannot fetch IP of redis server running in SageMaker:", e)
+    # def get_ip(self):
+    #     # self._wait_for_ip_upload()
+    #     # s3_client = self._get_client()
+    #     # try:
+    #     #     s3_client.download_file(self.params.bucket, self.ip_data_key, 'ip.json')
+    #     #     with open("ip.json") as f:
+    #     #         ip_address = json.load(f)[IP_KEY]
+    #     #     return ip_address
+    #     # except Exception as e:
+    #         raise RuntimeError("Cannot fetch IP of redis server running in SageMaker:", e)
 
     def download_presets_if_present(self, local_path):
         return self._download_directory(self.params.bucket, self.preset_data_prefix, local_path)

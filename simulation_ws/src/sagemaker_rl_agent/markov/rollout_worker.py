@@ -7,7 +7,7 @@ import math
 
 import random
 
-# from markov.s3_boto_data_store import S3BotoDataStoreParameters, S3BotoDataStore
+from markov.s3_boto_data_store import S3BotoDataStoreParameters, S3BotoDataStore
 from rl_coach.base_parameters import TaskParameters
 from rl_coach.core_types import RunPhase, EnvironmentEpisodes
 from rl_coach.memories.backend.redis import RedisPubSubMemoryBackendParameters
@@ -79,18 +79,17 @@ def main():
 
     args = parser.parse_args()
 
-    # data_store_params_instance = S3BotoDataStoreParameters(bucket_name=args.model_s3_bucket,
-    #                                                s3_folder=args.model_s3_prefix,
-    #                                                checkpoint_dir=args.local_model_directory,
-    #                                                aws_region=args.aws_region)
-    # data_store = S3BotoDataStore(data_store_params_instance)
+    data_store_params_instance = S3BotoDataStoreParameters(bucket_name=args.model_s3_bucket,
+                                                   s3_folder=args.model_s3_prefix,
+                                                   checkpoint_dir=args.local_model_directory,
+                                                   aws_region=args.aws_region)
+    data_store = S3BotoDataStore(data_store_params_instance)
 
     # Get the IP of the trainer machine
     # trainer_ip = data_store.get_ip()
     # print("Received IP from SageMaker successfully: %s" % trainer_ip)
 
-    # preset_file_success = data_store.download_presets_if_present(PRESET_LOCAL_PATH)
-    preset_file_success = false
+    preset_file_success = data_store.download_presets_if_present(PRESET_LOCAL_PATH)
 
     if preset_file_success:
         environment_file_success = data_store.download_environments_if_present(ENVIRONMENT_LOCAL_PATH)
@@ -113,10 +112,10 @@ def main():
     #                                                            run_type='worker',
     #                                                            channel=args.model_s3_prefix)
     # graph_manager.agent_params.memory.register_var('memory_backend_params', memory_backend_params)
-    # graph_manager.data_store_params = data_store_params_instance
-    # graph_manager.data_store = data_store
+    graph_manager.data_store_params = data_store_params_instance
+    graph_manager.data_store = data_store
 
-    utils.wait_for_checkpoint(checkpoint_dir=args.local_model_directory, data_store=None)
+    utils.wait_for_checkpoint(checkpoint_dir=args.local_model_directory, data_store=data_store)
     rollout_worker(
         graph_manager=graph_manager,
         checkpoint_dir=args.local_model_directory,
