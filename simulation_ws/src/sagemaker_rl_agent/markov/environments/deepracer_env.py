@@ -241,7 +241,7 @@ class DeepRacerEnv(gym.Env):
     def send_reward_to_cloudwatch(self, reward):
 
         f = open("./deepracer_rewards.txt","a")
-        f.write(reward+"\n")
+        f.write(str(reward)+"\n")
         f.close
 
         # session = boto3.session.Session()

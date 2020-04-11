@@ -212,7 +212,7 @@ class TurtleBot3ObjectTrackerAndFollowerEnv(gym.Env):
 
     def send_reward_to_cloudwatch(self, reward):
         f = open("./obj_tracker_rewards.txt","a")
-        f.write(reward+"\n")
+        f.write(str(reward)+"\n")
         f.close
         # session = boto3.session.Session()
         # cloudwatch_client = session.client('cloudwatch', region_name=self.aws_region)
