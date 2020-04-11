@@ -104,7 +104,7 @@ class S3BotoDataStore(DataStore):
         except Exception as e:
             raise e
 
-    def load_from_store(self, expected_checkpoint_number=-1):
+    # def load_from_store(self, expected_checkpoint_number=-1):
         # try:
         #     filename = os.path.abspath(os.path.join(self.params.checkpoint_dir, CHECKPOINT_METADATA_FILENAME))
         #     if not os.path.exists(self.params.checkpoint_dir):
@@ -159,25 +159,25 @@ class S3BotoDataStore(DataStore):
         #     print("Got exception while loading model from S3", e)
         #     raise e
 
-    # def store_ip(self, ip_address):
-        # s3_client = self._get_client()
-        # ip_data = {IP_KEY: ip_address}
-        # ip_data_json_blob = json.dumps(ip_data)
-        # ip_data_file_object = io.BytesIO(ip_data_json_blob.encode())
-        # ip_done_file_object = io.BytesIO(b'done')
-        # s3_client.upload_fileobj(ip_data_file_object, self.params.bucket, self.ip_data_key)
-        # s3_client.upload_fileobj(ip_done_file_object, self.params.bucket, self.ip_done_key)
+    def store_ip(self, ip_address):
+        s3_client = self._get_client()
+        ip_data = {IP_KEY: ip_address}
+        ip_data_json_blob = json.dumps(ip_data)
+        ip_data_file_object = io.BytesIO(ip_data_json_blob.encode())
+        ip_done_file_object = io.BytesIO(b'done')
+        s3_client.upload_fileobj(ip_data_file_object, self.params.bucket, self.ip_data_key)
+        s3_client.upload_fileobj(ip_done_file_object, self.params.bucket, self.ip_done_key)
 
-    # def get_ip(self):
-    #     # self._wait_for_ip_upload()
-    #     # s3_client = self._get_client()
-    #     # try:
-    #     #     s3_client.download_file(self.params.bucket, self.ip_data_key, 'ip.json')
-    #     #     with open("ip.json") as f:
-    #     #         ip_address = json.load(f)[IP_KEY]
-    #     #     return ip_address
-    #     # except Exception as e:
-    #         raise RuntimeError("Cannot fetch IP of redis server running in SageMaker:", e)
+    def get_ip(self):
+        self._wait_for_ip_upload()
+        s3_client = self._get_client()
+        try:
+            s3_client.download_file(self.params.bucket, self.ip_data_key, 'ip.json')
+            with open("ip.json") as f:
+                ip_address = json.load(f)[IP_KEY]
+            return ip_address
+        except Exception as e:
+            raise RuntimeError("Cannot fetch IP of redis server running in SageMaker:", e)
 
     def download_presets_if_present(self, local_path):
         return self._download_directory(self.params.bucket, self.preset_data_prefix, local_path)
