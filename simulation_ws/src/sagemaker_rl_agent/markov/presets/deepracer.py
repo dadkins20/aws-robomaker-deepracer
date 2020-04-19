@@ -28,7 +28,7 @@ schedule_params.heatup_steps = EnvironmentSteps(0)
 #########
 # Agent #
 #########
-agent_params = ActorCriticAgentParameters()
+agent_params = ClippedPPOAgentParameters()
 
 # agent_params.network_wrappers['main'].learning_rate = 0.00025
 # agent_params.network_wrappers['main'].batch_size = 64
