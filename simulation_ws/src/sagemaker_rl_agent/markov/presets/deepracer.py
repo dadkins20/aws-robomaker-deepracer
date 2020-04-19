@@ -1,4 +1,4 @@
-from rl_coach.agents.actor_critic_agent import ActorCriticAgentParameters
+from rl_coach.agents.rainbow_dqn_agent import RainbowDQNAgentParameters
 # PPO
 # from rl_coach.agents.clipped_ppo_agent import ClippedPPOAgentParameters
 from rl_coach.base_parameters import VisualizationParameters, PresetValidationParameters
@@ -28,11 +28,11 @@ schedule_params.heatup_steps = EnvironmentSteps(0)
 #########
 # Agent #
 #########
-agent_params = ActorCriticAgentParameters()
+agent_params = RainbowDQNAgentParameters()
 
-agent_params.network_wrappers['main'].learning_rate = 0.00025
-agent_params.network_wrappers['main'].batch_size = 64
-agent_params.network_wrappers['main'].clip_gradients = 40.0
+# agent_params.network_wrappers['main'].learning_rate = 0.00025
+# agent_params.network_wrappers['main'].batch_size = 64
+# agent_params.network_wrappers['main'].clip_gradients = 40.0
 
 # PPO Algorithm
 # agent_params.network_wrappers['main'].learning_rate = 0.0003
@@ -43,11 +43,11 @@ agent_params.network_wrappers['main'].clip_gradients = 40.0
 # agent_params.network_wrappers['main'].adam_optimizer_beta2 = 0.999
 
 # A3C Algo
-agent_params.algorithm.apply_gradients_every_x_episodes = 5
-agent_params.algorithm.beta_entropy = 0
-agent_params.algorithm.num_steps_between_gradient_updates = 5000
-agent_params.algorithm.gae_lambda = 0.96
-agent_params.algorithm.estimate_state_value_using_gae = False
+# agent_params.algorithm.apply_gradients_every_x_episodes = 5
+# agent_params.algorithm.beta_entropy = 0
+# agent_params.algorithm.num_steps_between_gradient_updates = 5000
+# agent_params.algorithm.gae_lambda = 0.96
+# agent_params.algorithm.estimate_state_value_using_gae = False
 
 # PPO Algo
 # agent_params.algorithm.clip_likelihood_ratio_using_epsilon = 0.2
@@ -83,7 +83,7 @@ vis_params.dump_mp4 = False
 preset_validation_params = PresetValidationParameters()
 preset_validation_params.test = True
 preset_validation_params.min_reward_threshold = 400
-preset_validation_params.max_episodes_to_achieve_reward = 1000
+preset_validation_params.max_episodes_to_achieve_reward = 10000
 
 graph_manager = BasicRLGraphManager(agent_params=agent_params, env_params=env_params,
                                     schedule_params=schedule_params, vis_params=vis_params,
