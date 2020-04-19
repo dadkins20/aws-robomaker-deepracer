@@ -30,6 +30,9 @@ schedule_params.heatup_steps = EnvironmentSteps(0)
 #########
 agent_params = RainbowDQNAgentParameters()
 
+agent_params.algorithm.n_step = 30
+agent_params.algorithm.store_transitions_only_when_episodes_are_terminated = True
+
 # agent_params.network_wrappers['main'].learning_rate = 0.00025
 # agent_params.network_wrappers['main'].batch_size = 64
 # agent_params.network_wrappers['main'].clip_gradients = 40.0
