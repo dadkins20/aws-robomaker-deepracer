@@ -1,6 +1,6 @@
-from rl_coach.agents.actor_critic_agent import ActorCriticAgentParameters
+# from rl_coach.agents.actor_critic_agent import ActorCriticAgentParameters
 # PPO
-# from rl_coach.agents.actor_critic_agent import ClippedPPOAgentParameters
+from rl_coach.agents.actor_critic_agent import ClippedPPOAgentParameters
 from rl_coach.base_parameters import VisualizationParameters, PresetValidationParameters
 from rl_coach.core_types import TrainingSteps, EnvironmentEpisodes, EnvironmentSteps, RunPhase
 from rl_coach.environments.gym_environment import GymVectorEnvironment
@@ -30,37 +30,37 @@ schedule_params.heatup_steps = EnvironmentSteps(0)
 #########
 agent_params = ActorCriticAgentParameters()
 
-agent_params.network_wrappers['main'].learning_rate = 0.00025
-agent_params.network_wrappers['main'].batch_size = 64
-agent_params.network_wrappers['main'].clip_gradients = 40.0
+# agent_params.network_wrappers['main'].learning_rate = 0.00025
+# agent_params.network_wrappers['main'].batch_size = 64
+# agent_params.network_wrappers['main'].clip_gradients = 40.0
 
 # PPO Algorithm
-# agent_params.network_wrappers['main'].learning_rate = 0.0003
-# agent_params.network_wrappers['main'].input_embedders_parameters['observation'].activation_function = 'relu'
-# agent_params.network_wrappers['main'].middleware_parameters.activation_function = 'relu'
-# agent_params.network_wrappers['main'].batch_size = 64
-# agent_params.network_wrappers['main'].optimizer_epsilon = 1e-5
-# agent_params.network_wrappers['main'].adam_optimizer_beta2 = 0.999
+agent_params.network_wrappers['main'].learning_rate = 0.0003
+agent_params.network_wrappers['main'].input_embedders_parameters['observation'].activation_function = 'relu'
+agent_params.network_wrappers['main'].middleware_parameters.activation_function = 'relu'
+agent_params.network_wrappers['main'].batch_size = 64
+agent_params.network_wrappers['main'].optimizer_epsilon = 1e-5
+agent_params.network_wrappers['main'].adam_optimizer_beta2 = 0.999
 
 # A3C Algo
-agent_params.algorithm.apply_gradients_every_x_episodes = 5
-agent_params.algorithm.beta_entropy = 0
-agent_params.algorithm.num_steps_between_gradient_updates = 5000
-agent_params.algorithm.gae_lambda = 0.96
-agent_params.algorithm.estimate_state_value_using_gae = False
+# agent_params.algorithm.apply_gradients_every_x_episodes = 5
+# agent_params.algorithm.beta_entropy = 0
+# agent_params.algorithm.num_steps_between_gradient_updates = 5000
+# agent_params.algorithm.gae_lambda = 0.96
+# agent_params.algorithm.estimate_state_value_using_gae = False
 
 # PPO Algo
-# agent_params.algorithm.clip_likelihood_ratio_using_epsilon = 0.2
-# agent_params.algorithm.clipping_decay_schedule = LinearSchedule(1.0, 0, 1000000)
-# agent_params.algorithm.beta_entropy = 0.01  # also try 0.001
-# agent_params.algorithm.gae_lambda = 0.95
-# agent_params.algorithm.discount = 0.999
-# agent_params.algorithm.optimization_epochs = 10
-# agent_params.algorithm.estimate_state_value_using_gae = True
-# agent_params.algorithm.num_steps_between_copying_online_weights_to_target = EnvironmentEpisodes(20)
-# agent_params.algorithm.num_consecutive_playing_steps = EnvironmentEpisodes(20)
-# agent_params.exploration = CategoricalParameters()
-# agent_params.memory.max_size = (MemoryGranularity.Transitions, 10**5)
+agent_params.algorithm.clip_likelihood_ratio_using_epsilon = 0.2
+agent_params.algorithm.clipping_decay_schedule = LinearSchedule(1.0, 0, 1000000)
+agent_params.algorithm.beta_entropy = 0.01  # also try 0.001
+agent_params.algorithm.gae_lambda = 0.95
+agent_params.algorithm.discount = 0.999
+agent_params.algorithm.optimization_epochs = 10
+agent_params.algorithm.estimate_state_value_using_gae = True
+agent_params.algorithm.num_steps_between_copying_online_weights_to_target = EnvironmentEpisodes(20)
+agent_params.algorithm.num_consecutive_playing_steps = EnvironmentEpisodes(20)
+agent_params.exploration = CategoricalParameters()
+agent_params.memory.max_size = (MemoryGranularity.Transitions, 10**5)
 
 ###############
 # Environment #
