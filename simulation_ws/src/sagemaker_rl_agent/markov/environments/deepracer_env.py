@@ -189,9 +189,9 @@ class DeepRacerEnv(gym.Env):
                         throttle, steering, track_width, waypoints, closest_waypoints):
         if distance_from_center >= 0.0 and distance_from_center <= 0.05:
             return 1.0
-        elif distance_from_center >= 0.05 and distance_from_center <= 0.1:
-            return 0.3
-        elif distance_from_center >= 0.1 and distance_from_center <= 0.25:
+        elif distance_from_center >= 0.05 and distance_from_center <= 0.15:
+            return 0.5
+        elif distance_from_center >= 0.15 and distance_from_center <= 0.25:
             return 0.1
         return 1e-3  # like crashed
 
@@ -334,19 +334,19 @@ class DeepRacerDiscreteEnv(DeepRacerEnv):
         # Convert discrete to continuous
         if action == 0:  # move left
             steering_angle = 0.8
-            throttle = 1
+            throttle = 1.5
         elif action == 1:  # move right
             steering_angle = -0.8  # -1 #-0.5 #-1
-            throttle = 1
+            throttle = 1.5
         elif action == 2:  # straight
             steering_angle = 0
-            throttle = 1
+            throttle = 1.5
         elif action == 3:  # move left
             steering_angle = 0.4
-            throttle = 1
+            throttle = 1.5
         elif action == 4:  # move right
             steering_angle = -0.4  # -1 #-0.5 #-1
-            throttle = 1
+            throttle = 1.5
         else:  # should not be here
             raise ValueError("Invalid action")
 
