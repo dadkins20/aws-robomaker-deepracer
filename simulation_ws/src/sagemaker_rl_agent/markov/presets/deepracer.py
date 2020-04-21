@@ -20,7 +20,7 @@ from rl_coach.memories.memory import MemoryGranularity
 ####################
 
 schedule_params = ScheduleParameters()
-schedule_params.improve_steps = TrainingSteps(10000000)
+schedule_params.improve_steps = TrainingSteps(250000)
 schedule_params.steps_between_evaluation_periods = EnvironmentEpisodes(40)
 schedule_params.evaluation_steps = EnvironmentEpisodes(5)
 schedule_params.heatup_steps = EnvironmentSteps(0)
