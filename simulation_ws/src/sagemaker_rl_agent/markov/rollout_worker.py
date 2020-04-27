@@ -122,7 +122,7 @@ def main():
     rollout_worker(
         graph_manager=graph_manager,
         checkpoint_dir=args.local_model_directory,
-        data_store=None,
+        data_store=data_store,
         num_workers=args.num_rollout_workers
     )
 
