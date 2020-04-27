@@ -124,7 +124,8 @@ while the second is when the algorithm uses the information gathered in the firs
 phase, no new commands are sent to the car, meaning it will appear as if it is stopped, spinning in circles, or drifting off
 aimlessly.
 
-###### When running training you see an error similar to `GPG error: http://packages.osrfoundation.org trusty InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 67170598AF249743`
+###### When running training you see an error similar to:
+`GPG error: http://packages.osrfoundation.org trusty InRelease: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 67170598AF249743`
 
 You are missing the key needed to run Gazebo.  Read this [article](https://askubuntu.com/questions/611221/gpg-error-http-packages-osrfoundation-org).
 
