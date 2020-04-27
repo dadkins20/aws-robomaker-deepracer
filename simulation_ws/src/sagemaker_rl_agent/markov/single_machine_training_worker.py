@@ -106,6 +106,8 @@ def main():
     graph_manager.should_stop = should_stop_training_based_on_evaluation
     start_graph(graph_manager=graph_manager, task_parameters=task_parameters)
 
+    exit()
+
 
 if __name__ == '__main__':
     main()
