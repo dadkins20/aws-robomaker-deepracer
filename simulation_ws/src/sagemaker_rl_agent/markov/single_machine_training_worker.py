@@ -26,7 +26,7 @@ def start_graph(graph_manager: 'GraphManager', task_parameters: 'TaskParameters'
     graph_manager.create_graph(task_parameters)
 
     # save randomly initialized graph
-    graph_manager.save_checkpoint()
+    # graph_manager.save_checkpoint()
 
     # Start the training
     graph_manager.improve()
