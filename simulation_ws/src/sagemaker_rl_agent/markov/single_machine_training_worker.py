@@ -25,10 +25,8 @@ if not os.path.exists(CUSTOM_FILES_PATH):
 def start_graph(graph_manager: 'GraphManager', task_parameters: 'TaskParameters'):
     graph_manager.create_graph(task_parameters)
 
-    graph_manager.restore_checkpoint()
-
     # save randomly initialized graph
-    # graph_manager.save_checkpoint()
+    graph_manager.save_checkpoint()
 
     # Start the training
     graph_manager.improve()
@@ -90,9 +88,12 @@ def main():
 
     # TODO: support other frameworks
     task_parameters = TaskParameters(framework_type=Frameworks.tensorflow,
-                                     checkpoint_save_secs=args.checkpoint_save_secs)
-    task_parameters.__dict__['checkpoint_save_dir'] = args.local_model_directory
-    task_parameters.__dict__ = add_items_to_dict(task_parameters.__dict__, args.__dict__)
+                                     checkpoint_save_secs=args.checkpoint_save_secs,
+                                     checkpoint_restore_path=args.local_model_directory,
+                                     checkpoint_save_dir=args.local_model_directory)
+    # task_parameters.__dict__['checkpoint_save_dir'] = args.local_model_directory
+    # task_parameters.__dict__['checkpoint_restore_path'] = args.local_model_directory
+    # task_parameters.__dict__ = add_items_to_dict(task_parameters.__dict__, args.__dict__)
 
     data_store_params_instance = S3BotoDataStoreParameters(bucket_name=args.model_s3_bucket,
                                                            s3_folder=args.model_s3_prefix,
