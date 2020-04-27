@@ -25,10 +25,10 @@ if not os.path.exists(CUSTOM_FILES_PATH):
 def start_graph(graph_manager: 'GraphManager', task_parameters: 'TaskParameters'):
     graph_manager.create_graph(task_parameters)
 
-    exit()
+    graph_manager.restore_checkpoint()
 
     # save randomly initialized graph
-    graph_manager.save_checkpoint()
+    # graph_manager.save_checkpoint()
 
     # Start the training
     graph_manager.improve()
