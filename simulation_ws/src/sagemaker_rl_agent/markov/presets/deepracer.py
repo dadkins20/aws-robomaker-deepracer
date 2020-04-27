@@ -29,13 +29,10 @@ schedule_params.heatup_steps = EnvironmentSteps(0)
 # Agent #
 #########
 agent_params = RainbowDQNAgentParameters()
+# agent_params = ClippedPPOAgentParameters()
 
 agent_params.algorithm.n_step = 30
 agent_params.algorithm.store_transitions_only_when_episodes_are_terminated = True
-
-# agent_params.network_wrappers['main'].learning_rate = 0.00025
-# agent_params.network_wrappers['main'].batch_size = 64
-# agent_params.network_wrappers['main'].clip_gradients = 40.0
 
 # PPO Algorithm
 # agent_params.network_wrappers['main'].learning_rate = 0.0003
@@ -45,14 +42,6 @@ agent_params.algorithm.store_transitions_only_when_episodes_are_terminated = Tru
 # agent_params.network_wrappers['main'].optimizer_epsilon = 1e-5
 # agent_params.network_wrappers['main'].adam_optimizer_beta2 = 0.999
 
-# A3C Algo
-# agent_params.algorithm.apply_gradients_every_x_episodes = 5
-# agent_params.algorithm.beta_entropy = 0
-# agent_params.algorithm.num_steps_between_gradient_updates = 5000
-# agent_params.algorithm.gae_lambda = 0.96
-# agent_params.algorithm.estimate_state_value_using_gae = False
-
-# PPO Algo
 # agent_params.algorithm.clip_likelihood_ratio_using_epsilon = 0.2
 # agent_params.algorithm.clipping_decay_schedule = LinearSchedule(1.0, 0, 1000000)
 # agent_params.algorithm.beta_entropy = 0.01  # also try 0.001

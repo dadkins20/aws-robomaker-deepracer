@@ -1,5 +1,8 @@
 """
 This is a rollout training worker. It starts a local training and stores the model in S3.
+
+DJA 042720: This file is not used in local training, it's only needed for distributed training with Sagemaker or REDIS
+
 """
 
 import argparse
@@ -86,8 +89,8 @@ def main():
     data_store = S3BotoDataStore(data_store_params_instance)
 
     # Get the IP of the trainer machine
-    # trainer_ip = data_store.get_ip()
-    # print("Received IP from SageMaker successfully: %s" % trainer_ip)
+    trainer_ip = data_store.get_ip()
+    print("Received IP from SageMaker successfully: %s" % trainer_ip)
 
     preset_file_success = data_store.download_presets_if_present(PRESET_LOCAL_PATH)
 
@@ -107,11 +110,11 @@ def main():
     else:
         raise ValueError("Unable to determine preset file")
 
-    # memory_backend_params = RedisPubSubMemoryBackendParameters(redis_address=trainer_ip,
-    #                                                            redis_port=TRAINER_REDIS_PORT,
-    #                                                            run_type='worker',
-    #                                                            channel=args.model_s3_prefix)
-    # graph_manager.agent_params.memory.register_var('memory_backend_params', memory_backend_params)
+    memory_backend_params = RedisPubSubMemoryBackendParameters(redis_address=trainer_ip,
+                                                               redis_port=TRAINER_REDIS_PORT,
+                                                               run_type='worker',
+                                                               channel=args.model_s3_prefix)
+    graph_manager.agent_params.memory.register_var('memory_backend_params', memory_backend_params)
     graph_manager.data_store_params = data_store_params_instance
     graph_manager.data_store = data_store
 

@@ -23,19 +23,15 @@ if not os.path.exists(CUSTOM_FILES_PATH):
 
 
 def start_graph(graph_manager: 'GraphManager', task_parameters: 'TaskParameters'):
+    # this will load any previous checkpoints
     graph_manager.create_graph(task_parameters)
 
-    # save randomly initialized graph
-    # graph_manager.save_checkpoint()
+    # save randomly initialized graph or resave the current checkpoint.... with a new step count and checkpoint number of 0...
+    # TODO: figure out how to update total step count and cumulative rewards
+    graph_manager.save_checkpoint()
 
     # Start the training
     graph_manager.improve()
-
-
-def add_items_to_dict(target_dict, source_dict):
-    updated_task_parameters = copy.copy(source_dict)
-    updated_task_parameters.update(target_dict)
-    return updated_task_parameters
 
 def should_stop_training_based_on_evaluation():
     return False
@@ -45,7 +41,7 @@ def main():
     parser.add_argument('--markov-preset-file',
                         help="(string) Name of a preset file to run in Markov's preset directory.",
                         type=str,
-                        default=os.environ.get("MARKOV_PRESET_FILE", "object_tracker.py"))
+                        default=os.environ.get("MARKOV_PRESET_FILE", "deepracer.py"))
     parser.add_argument('-c', '--local_model_directory',
                         help='(string) Path to a folder containing a checkpoint to restore the model from.',
                         type=str,
@@ -69,7 +65,7 @@ def main():
     parser.add_argument('--checkpoint-save-secs',
                         help="(int) Time period in second between 2 checkpoints",
                         type=int,
-                        default=300)
+                        default=900)
     parser.add_argument('--save-frozen-graph',
                         help="(bool) True if we need to store the frozen graph",
                         type=bool,
@@ -91,9 +87,6 @@ def main():
                                      checkpoint_save_secs=args.checkpoint_save_secs,
                                      checkpoint_restore_path=args.local_model_directory,
                                      checkpoint_save_dir=args.local_model_directory)
-    # task_parameters.__dict__['checkpoint_save_dir'] = args.local_model_directory
-    # task_parameters.__dict__['checkpoint_restore_path'] = args.local_model_directory
-    # task_parameters.__dict__ = add_items_to_dict(task_parameters.__dict__, args.__dict__)
 
     data_store_params_instance = S3BotoDataStoreParameters(bucket_name=args.model_s3_bucket,
                                                            s3_folder=args.model_s3_prefix,

@@ -59,37 +59,37 @@ class S3BotoDataStore(DataStore):
                                     #  Key=self._get_s3_key(self.params.lock_file))
 
             # Start writing the model checkpoints to S3
-            # checkpoint_file = None
-            # for root, dirs, files in os.walk(self.params.checkpoint_dir):
-            #     for filename in files:
-            #         # Skip the checkpoint file that has the latest checkpoint number
-            #         if filename == CHECKPOINT_METADATA_FILENAME:
-            #             checkpoint_file = (root, filename)
-            #             continue
+            checkpoint_file = None
+            for root, dirs, files in os.walk(self.params.checkpoint_dir):
+                for filename in files:
+                    # Skip the checkpoint file that has the latest checkpoint number
+                    if filename == CHECKPOINT_METADATA_FILENAME:
+                        checkpoint_file = (root, filename)
+                        continue
 
-            #         # Upload all the other files from the checkpoint directory
-            #         abs_name = os.path.abspath(os.path.join(root, filename))
-            #         rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
+                    # Upload all the other files from the checkpoint directory
+                    abs_name = os.path.abspath(os.path.join(root, filename))
+                    rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
             #         s3_client.upload_file(Filename=abs_name,
             #                               Bucket=self.params.bucket,
             #                               Key=self._get_s3_key(rel_name))
 
             # After all the checkpoint files have been uploaded, we upload the version file.
-            # abs_name = os.path.abspath(os.path.join(checkpoint_file[0], checkpoint_file[1]))
-            # rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
+            abs_name = os.path.abspath(os.path.join(checkpoint_file[0], checkpoint_file[1]))
+            rel_name = os.path.relpath(abs_name, self.params.checkpoint_dir)
             # s3_client.upload_file(Filename=abs_name,
             #                       Bucket=self.params.bucket,
             #                       Key=self._get_s3_key(rel_name))
 
-            # # Release the lock by deleting the lock file from S3
+            # Release the lock by deleting the lock file from S3
             # s3_client.delete_object(Bucket=self.params.bucket, Key=self._get_s3_key(self.params.lock_file))
 
-            # checkpoint = self._get_current_checkpoint()
-            # if checkpoint:
-            #     checkpoint_number = self._get_checkpoint_number(checkpoint)
-            #     checkpoint_number_to_delete = checkpoint_number - 4
+            checkpoint = self._get_current_checkpoint()
+            if checkpoint:
+                checkpoint_number = self._get_checkpoint_number(checkpoint)
+                checkpoint_number_to_delete = checkpoint_number - 4
 
-            #     # List all the old checkpoint files that needs to be deleted
+                # List all the old checkpoint files that needs to be deleted
             #     response = s3_client.list_objects_v2(Bucket=self.params.bucket,
             #                                          Prefix=self._get_s3_key(str(checkpoint_number_to_delete) + "_"))
             #     if "Contents" in response:
@@ -100,7 +100,7 @@ class S3BotoDataStore(DataStore):
             #             num_files += 1
 
             #         print("Deleted %s model files from S3" % num_files)
-            #         return True
+                return True
         except Exception as e:
             raise e
 
