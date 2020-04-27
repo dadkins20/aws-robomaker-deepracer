@@ -10,9 +10,9 @@ Keywords: Reinforcement learning, AWS, RoboMaker
 
 ## Requirements
 
-- Python 3 (install modules through pip: `- python3 -m pip install tensorflow==1.15.2 rl_coach intel_tensorflow==2.01 boto3`)
+- Python 3 (install modules through pip: `python3 -m pip install tensorflow==1.15.2 rl_coach intel_tensorflow==2.01 boto3`)
 - ROS Kinetic / Melodic - To run the simulation locally. Other distributions of ROS may work, however they have not been tested
-- Gazebo - To run the simulation locally (you may need this URL to fix GPG error: https://askubuntu.com/questions/611221/gpg-error-http-packages-osrfoundation-org)
+- Gazebo - To run the simulation locally. You may need this URL to fix a [GPG error](https://askubuntu.com/questions/611221/gpg-error-http-packages-osrfoundation-org).
 - An AWS S3 bucket (optional) - To store the trained reinforcement learning model
 - AWS RoboMaker (optional) - To run the simulation and to deploy the trained model to the robot
 
@@ -70,7 +70,7 @@ The following environment variables must be set when you run your simulation:
 - `MARKOV_PRESET_FILE` - Defines the hyperparameters of the reinforcement learning algorithm. This should be set to `deepracer.py`.
 - `WORLD_NAME` - The track to train the model on. Can be one of easy_track, medium_track, or hard_track.
 
-These must be set, but can be filled with dummy data
+These must be set, but can be filled with dummy data if you do not want to store data in Amazon S3.
 
 - `MODEL_S3_BUCKET` - The name of the S3 bucket in which you want to store the trained model.
 - `MODEL_S3_PREFIX` - The path where you want to store the model.
