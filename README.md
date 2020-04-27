@@ -1,6 +1,6 @@
 # Deep Racer
 
-This Sample Application runs a simulation which trains a reinforcement learning (RL) model to drive a car around a track.
+This Sample Application runs a simulation which trains a reinforcement learning (RL) model to drive a car around a track.  This version has been modified from the original to support the University at Buffalo in training various RL models locally without using Amazon Web Services to load and store data.
 
 _AWS RoboMaker sample applications include third-party software licensed under open-source licenses and is provided for demonstration purposes only. Incorporation or use of RoboMaker sample applications in connection with your production workloads or a commercial products or devices may affect your legal rights or obligations under the applicable open-source licenses. Source code information can be found [here](https://s3.console.aws.amazon.com/s3/buckets/robomaker-applications-us-east-1-72fc243f9355/deep-racer/?region=us-east-1)._
 
@@ -10,10 +10,10 @@ Keywords: Reinforcement learning, AWS, RoboMaker
 
 ## Requirements
 
-- ROS Kinetic / Melodic (optional) - To run the simulation locally. Other distributions of ROS may work, however they have not been tested
-- Gazebo (optional) - To run the simulation locally
-- An AWS S3 bucket - To store the trained reinforcement learning model
-- AWS RoboMaker - To run the simulation and to deploy the trained model to the robot
+- ROS Kinetic / Melodic - To run the simulation locally. Other distributions of ROS may work, however they have not been tested
+- Gazebo - To run the simulation locally
+- An AWS S3 bucket (optional) - To store the trained reinforcement learning model
+- AWS RoboMaker (optional) - To run the simulation and to deploy the trained model to the robot
 
 ## AWS Account Setup
 
@@ -59,8 +59,7 @@ To train the reinforcement learning model in simulation, you need an IAM role wi
 cd simulation_ws
 rosws update
 rosdep install --from-paths src --ignore-src -r -y
-colcon build
-colcon bundle
+colcon build && colcon bundle
 ```
 
 #### Running the simulation
@@ -69,9 +68,12 @@ colcon bundle
 The following environment variables must be set when you run your simulation:
 
 - `MARKOV_PRESET_FILE` - Defines the hyperparameters of the reinforcement learning algorithm. This should be set to `deepracer.py`.
+- `WORLD_NAME` - The track to train the model on. Can be one of easy_track, medium_track, or hard_track.
+
+These must be set, but can be filled with dummy data
+
 - `MODEL_S3_BUCKET` - The name of the S3 bucket in which you want to store the trained model.
 - `MODEL_S3_PREFIX` - The path where you want to store the model.
-- `WORLD_NAME` - The track to train the model on. Can be one of easy_track, medium_track, or hard_track.
 - `ROS_AWS_REGION` - The region of the S3 bucket in which you want to store the model.
 - `AWS_ACCESS_KEY_ID` - The access key for the role you created in the "AWS Permissions" section
 - `AWS_SECRET_ACCESS_KEY` - The secret access key for the role you created in the "AWS Permissions" section
@@ -80,8 +82,9 @@ The following environment variables must be set when you run your simulation:
 Once the environment variables are set, you can run local training using the roslaunch command
 
 ```bash
+cd ..
 source simulation_ws/install/setup.sh
-roslaunch deepracer_simulation local_training.launch
+roslaunch deepracer_simulation local_training.launch gui:=true
 ```
 
 #### Seeing your robot learn
@@ -93,6 +96,8 @@ All -> AWSRoboMakerSimulation -> Metrics with no dimensions -> Metric Name -> De
 You can think of this metric as an indicator into how well your model has been trained. If the graph has plateaus, then your robot has finished learning.
 
 ![deepracer-metrics.png](docs/images/deepracer-metrics.png)
+
+The reward data from each episode is also stored in the deepracer-reward.txt file, which you can make using matplotlib or some other visualization tool.
 
 ### Evaluating the model
 
@@ -107,7 +112,7 @@ evaluation using the roslaunch command
 
 ```bash
 source simulation_ws/install/setup.sh
-roslaunch deepracer_simulation evaluation.launch
+roslaunch deepracer_simulation evaluation.launch gui:=true
 ```
 
 ### Troubleshooting
