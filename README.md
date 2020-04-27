@@ -1,6 +1,6 @@
 # Deep Racer
 
-This Sample Application runs a simulation which trains a reinforcement learning (RL) model to drive a car around a track.  This version has been modified from the original to support the University at Buffalo in training various RL models locally without using Amazon Web Services to load and store data.
+This Sample Application runs a simulation which trains a reinforcement learning (RL) model to drive a car around a track.  This version has been modified from the original to support the University at Buffalo CSE department in training various RL models locally without using Amazon Web Services to load and store data.
 
 _AWS RoboMaker sample applications include third-party software licensed under open-source licenses and is provided for demonstration purposes only. Incorporation or use of RoboMaker sample applications in connection with your production workloads or a commercial products or devices may affect your legal rights or obligations under the applicable open-source licenses. Source code information can be found [here](https://s3.console.aws.amazon.com/s3/buckets/robomaker-applications-us-east-1-72fc243f9355/deep-racer/?region=us-east-1)._
 
@@ -10,16 +10,16 @@ Keywords: Reinforcement learning, AWS, RoboMaker
 
 ## Requirements
 
+- Python 3 (install modules through pip: `- python3 -m pip install tensorflow==1.15.2 rl_coach intel_tensorflow==2.01 boto3`)
 - ROS Kinetic / Melodic - To run the simulation locally. Other distributions of ROS may work, however they have not been tested
-- Gazebo - To run the simulation locally
+- Gazebo - To run the simulation locally (you may need this URL to fix GPG error: https://askubuntu.com/questions/611221/gpg-error-http-packages-osrfoundation-org)
 - An AWS S3 bucket (optional) - To store the trained reinforcement learning model
 - AWS RoboMaker (optional) - To run the simulation and to deploy the trained model to the robot
 
-## AWS Account Setup
+## AWS Account Setup (If you plan to store models in S3)
 
 ### AWS Credentials
 You will need to create an AWS Account and configure the credentials to be able to communicate with AWS services. You may find [AWS Configuration and Credential Files](https://docs.aws.amazon.com/cli/latest/userguide/cli-config-files.html) helpful.
-
 
 ### AWS Permissions
 
