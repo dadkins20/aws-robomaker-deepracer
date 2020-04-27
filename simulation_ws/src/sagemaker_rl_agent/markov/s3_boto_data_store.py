@@ -104,7 +104,7 @@ class S3BotoDataStore(DataStore):
         except Exception as e:
             raise e
 
-    # def load_from_store(self, expected_checkpoint_number=-1):
+    def load_from_store(self, expected_checkpoint_number=-1):
         try:
             filename = os.path.abspath(os.path.join(self.params.checkpoint_dir, CHECKPOINT_METADATA_FILENAME))
             if not os.path.exists(self.params.checkpoint_dir):
