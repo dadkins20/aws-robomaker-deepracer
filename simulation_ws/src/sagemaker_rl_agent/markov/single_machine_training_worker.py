@@ -25,6 +25,8 @@ if not os.path.exists(CUSTOM_FILES_PATH):
 def start_graph(graph_manager: 'GraphManager', task_parameters: 'TaskParameters'):
     graph_manager.create_graph(task_parameters)
 
+    exit()
+
     # save randomly initialized graph
     graph_manager.save_checkpoint()
 
@@ -105,8 +107,6 @@ def main():
     graph_manager.data_store = data_store
     graph_manager.should_stop = should_stop_training_based_on_evaluation
     start_graph(graph_manager=graph_manager, task_parameters=task_parameters)
-
-    exit()
 
 
 if __name__ == '__main__':
