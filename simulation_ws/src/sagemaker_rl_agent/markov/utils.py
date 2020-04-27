@@ -40,7 +40,7 @@ def write_frozen_graph(graph_manager, local_path):
     if not os.path.exists(local_path):
         os.makedirs(local_path)
     # TODO: Supports only PPO
-    # output_head = ['main_level/agent/main/online/network_0/policy_values_head_1/policy']
+    # output_head = ['main_level/agent/main/online/network_0/policy_values_head_1/sub_action_0']
     # frozen = tf.graph_util.convert_variables_to_constants(graph_manager.sess, graph_manager.sess.graph_def, output_head)
     # tf.train.write_graph(frozen, local_path, 'model.pb', as_text=False)
     # print("Saved TF frozen graph!")
