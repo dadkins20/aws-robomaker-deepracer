@@ -83,9 +83,13 @@ def main():
         raise ValueError("Unable to determine preset file")
 
     # TODO: support other frameworks
+    if os.path.isfile(args.local_model_directory+"/checkpoint"):
+        local = args.local_model_directory
+    else:
+        local = None
     task_parameters = TaskParameters(framework_type=Frameworks.tensorflow,
                                      checkpoint_save_secs=args.checkpoint_save_secs,
-                                     checkpoint_restore_path=args.local_model_directory,
+                                     checkpoint_restore_path=local,
                                      checkpoint_save_dir=args.local_model_directory)
 
     data_store_params_instance = S3BotoDataStoreParameters(bucket_name=args.model_s3_bucket,
