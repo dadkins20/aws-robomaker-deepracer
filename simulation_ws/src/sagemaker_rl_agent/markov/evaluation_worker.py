@@ -5,7 +5,7 @@ import sys
 import imp
 
 from rl_coach.core_types import EnvironmentEpisodes
-from rl_coach.base_parameters import TaskParameters
+from rl_coach.base_parameters import TaskParameters, Frameworks
 from rl_coach.utils import short_dynamic_import
 
 from markov.s3_boto_data_store import S3BotoDataStoreParameters, S3BotoDataStore
@@ -25,7 +25,8 @@ logger = logging.getLogger(__name__)
 
 def evaluation_worker(graph_manager, number_of_trials, local_model_directory):
     # initialize graph
-    task_parameters = TaskParameters(checkpoint_restore_path=local_model_directory,
+    task_parameters = TaskParameters(framework_type=Frameworks.tensorflow,
+                                    checkpoint_restore_path=local_model_directory,
                                     checkpoint_restore_dir=local_model_directory)
     graph_manager.create_graph(task_parameters)
 
@@ -53,7 +54,7 @@ def main():
     parser.add_argument('--number-of-trials',
                         help='(integer) Number of trials',
                         type=int,
-                        default=os.environ.get("NUMBER_OF_TRIALS", 50))
+                        default=os.environ.get("NUMBER_OF_TRIALS", 5))
     parser.add_argument('-c', '--local-model-directory',
                         help='(string) Path to a folder containing a checkpoint to restore the model from.',
                         type=str,
@@ -85,6 +86,7 @@ def main():
         raise ValueError("Unable to determine preset file")
 
     graph_manager.data_store = data_store
+    graph_manager.data_store_params_instance = data_store_params_instance
     evaluation_worker(
         graph_manager=graph_manager,
         number_of_trials=args.number_of_trials,
