@@ -25,8 +25,8 @@ logger = logging.getLogger(__name__)
 
 def evaluation_worker(graph_manager, number_of_trials, local_model_directory):
     # initialize graph
-    task_parameters = TaskParameters()
-    task_parameters.__dict__['checkpoint_restore_dir'] = local_model_directory
+    task_parameters = TaskParameters(checkpoint_restore_path=local_model_directory,
+                                    checkpoint_restore_dir=local_model_directory)
     graph_manager.create_graph(task_parameters)
 
     graph_manager.evaluate(EnvironmentEpisodes(number_of_trials))
@@ -53,7 +53,7 @@ def main():
     parser.add_argument('--number-of-trials',
                         help='(integer) Number of trials',
                         type=int,
-                        default=os.environ.get("NUMBER_OF_TRIALS", sys.maxsize))
+                        default=os.environ.get("NUMBER_OF_TRIALS", 50))
     parser.add_argument('-c', '--local-model-directory',
                         help='(string) Path to a folder containing a checkpoint to restore the model from.',
                         type=str,
