@@ -54,7 +54,7 @@ def main():
     parser.add_argument('--number-of-trials',
                         help='(integer) Number of trials',
                         type=int,
-                        default=os.environ.get("NUMBER_OF_TRIALS", 5))
+                        default=os.environ.get("NUMBER_OF_TRIALS", 50))
     parser.add_argument('-c', '--local-model-directory',
                         help='(string) Path to a folder containing a checkpoint to restore the model from.',
                         type=str,
