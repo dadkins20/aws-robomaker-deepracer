@@ -1,4 +1,4 @@
-from rl_coach.agents.rainbow_dqn_agent import ActorCriticAgentParameters
+from rl_coach.agents.actor_critic_agent import ActorCriticAgentParameters
 from rl_coach.base_parameters import VisualizationParameters, PresetValidationParameters
 from rl_coach.core_types import TrainingSteps, EnvironmentEpisodes, EnvironmentSteps, RunPhase
 from rl_coach.environments.gym_environment import GymVectorEnvironment
@@ -32,11 +32,11 @@ agent_params.network_wrappers['main'].learning_rate = 0.00025
 agent_params.network_wrappers['main'].batch_size = 64
 agent_params.network_wrappers['main'].clip_gradients = 40.0
 
-agent_params.algorithm.apply_gradients_every_x_episodes = EnvironmentEpisodes(5)
+agent_params.algorithm.apply_gradients_every_x_episodes = 20
 agent_params.algorithm.beta_entropy = 0.01  # also try 0.001
 agent_params.algorithm.gae_lambda = 0.96
 agent_params.algorithm.estimate_state_value_using_gae = True
-agent_params.algorithm.num_steps_between_gradient_updates = EnvironmentEpisodes(20)
+agent_params.algorithm.num_steps_between_gradient_updates = 1000
 
 ###############
 # Environment #
